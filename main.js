@@ -2,6 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { getStyledComponentsCss } from "./styledComponents.js";
+import { getTailwindCss } from "./tailwindCss.js";
 
 const currentPath = process.cwd();
 
@@ -16,17 +17,18 @@ async function getUserCssData() {
 
       if (fileContents.includes('"styled-components"')) {
         getStyledComponentsCss(currentPath, cssInfo);
-      } else {
+      } else if (fileContents.includes("tailwindcss")) {
+        cssInfo.push(...(await getTailwindCss(currentPath)));
       }
     }
   }
-  console.log(cssInfo);
 
   return cssInfo;
 }
 
 async function main() {
   const cssInfo = await getUserCssData();
+  console.log(cssInfo);
 }
 
 main();
