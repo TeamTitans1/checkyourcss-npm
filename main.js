@@ -48,7 +48,7 @@ async function main() {
         console.dir(err);
         return;
       }
-      // 아스키 아트에 색상 적용
+
       console.log(chalk.redBright.bold(data));
       Object.values(resultToShow).forEach(notSupport => {
         console.log(`Property: ${notSupport.property}`);
