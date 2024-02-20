@@ -33,10 +33,11 @@
     "prettier": "^3.2.5"
   },
   "bin": {
-    "cyc": "./main.js"
+    "cyc3": "./main.js"
   },
   "dependencies": {
     "@mdn/browser-compat-data": "^5.5.10",
-    "axios": "^1.6.7"
+    "axios": "^1.6.7",
+    "inquirer": "^9.2.15"
   }
 }

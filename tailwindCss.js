@@ -173,19 +173,24 @@ function extractTailwindClassesFromDirectory(
 
 function createCssInfo(pathAndTailwindClasses, cssPropertiesAndTwInfo) {
   pathAndTailwindClasses.forEach(info => {
-    info.cssMatching = [];
+    info.cssMatching = {};
     info.cssProperties = [];
 
     info.tailwindClasses.forEach(tailwindClass => {
       cssPropertiesAndTwInfo.forEach(item => {
         const cssPropertyName = Object.keys(item)[0];
-        const cssPropertyValue = item[cssPropertyName];
+        const cssPropertyValue = item[cssPropertyName].slice(1);
 
         if (
-          cssPropertyValue.includes(tailwindClass.className) &&
+          cssPropertyValue === tailwindClass.className &&
           !cssPropertyName.includes("--tw-")
         ) {
-          info.cssMatching.push({ [cssPropertyName]: tailwindClass.className });
+          if (info.cssMatching[cssPropertyName]) {
+            info.cssMatching[cssPropertyName].push(tailwindClass);
+          } else {
+            info.cssMatching[cssPropertyName] = [tailwindClass];
+          }
+
           info.cssProperties.push({
             property: cssPropertyName,
             line: tailwindClass.path,
