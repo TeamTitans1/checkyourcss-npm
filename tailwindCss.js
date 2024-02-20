@@ -173,7 +173,6 @@ function extractTailwindClassesFromDirectory(
 
 function createCssInfo(pathAndTailwindClasses, cssPropertiesAndTwInfo) {
   pathAndTailwindClasses.forEach(info => {
-    const cssProperties = new Set();
     info.cssMatching = [];
     info.cssProperties = [];
 
@@ -191,7 +190,6 @@ function createCssInfo(pathAndTailwindClasses, cssPropertiesAndTwInfo) {
             property: cssPropertyName,
             line: tailwindClass.path,
           });
-          cssProperties.add(cssPropertyName);
         }
       });
     });
@@ -200,7 +198,6 @@ function createCssInfo(pathAndTailwindClasses, cssPropertiesAndTwInfo) {
 
 async function getTailwindCss(projectDirectory) {
   const pathAndTailwindClasses = [];
-
   const cssPropertiesAndTwInfo = await getTailwindCssProperties();
 
   extractTailwindClassesFromDirectory(projectDirectory, pathAndTailwindClasses);
