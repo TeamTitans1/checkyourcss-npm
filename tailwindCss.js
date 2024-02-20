@@ -78,7 +78,6 @@ async function getTailwindCssProperties() {
   const tempDir = path.join(os.tmpdir(), "build-folder");
 
   copyFiles(process.cwd(), tempDir);
-
   process.chdir(tempDir);
   execSync("npm install; npm run build");
 
@@ -86,26 +85,28 @@ async function getTailwindCssProperties() {
   const cssFilePath = getCssFilePath(buildDirectoryPath);
   const css = fs.readFileSync(cssFilePath, "utf8");
 
-  const cssPropertiesAndTwInfo = await postcss()
-    .process(css, { from: cssFilePath })
-    .then(result => {
-      const cssProperties = [];
-      const root = result.root;
+  try {
+    const result = await postcss().process(css, { from: cssFilePath });
+    const cssProperties = [];
+    const root = result.root;
 
-      root.walkDecls(decl => {
-        if (decl.parent.selector.startsWith(".")) {
-          cssProperties.push({ [decl.prop]: decl.parent.selector });
-        }
-      });
-
-      return cssProperties;
+    root.walkDecls(decl => {
+      if (decl.parent.selector.startsWith(".")) {
+        cssProperties.push({ [decl.prop]: decl.parent.selector });
+      }
     });
+
+    return cssProperties;
+  } catch (err) {
+    console.error(err);
+  }
 
   return cssPropertiesAndTwInfo;
 }
 
 function parseFileToAST(filePath) {
   const fileContent = fs.readFileSync(filePath, "utf-8");
+
   return parse(fileContent, {
     sourceType: "module",
     plugins: ["jsx", "typescript"],

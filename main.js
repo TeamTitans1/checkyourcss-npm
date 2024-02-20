@@ -28,6 +28,7 @@ async function getUserCssData() {
 
 async function main() {
   const cssInfo = await getUserCssData();
+  console.log(cssInfo);
 }
 
 main();
