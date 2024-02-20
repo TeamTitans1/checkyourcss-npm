@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 import fs from "fs";
 import path from "path";
-import { getStyledComponentsCss } from "./styledComponents.js";
 import { getTailwindCss } from "./tailwindCss.js";
+import { checkCssCompatibility } from "./cssCompatibility.js";
+import { getStyledComponentsCss } from "./styledComponents.js";
+import { selectBrowsersAndVersions } from "./userSelection.js";
 
 const currentPath = process.cwd();
 
@@ -27,8 +29,9 @@ async function getUserCssData() {
 }
 
 async function main() {
+  const userSelections = await selectBrowsersAndVersions();
   const cssInfo = await getUserCssData();
-  console.log(cssInfo);
+  const result = await checkCssCompatibility(cssInfo, userSelections);
 }
 
 main();
