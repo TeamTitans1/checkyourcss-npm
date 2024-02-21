@@ -125,7 +125,6 @@ function getVersionCompatibility(selection, property, canIUseData, line) {
       );
     }
 
-    // 사용 예시:
     const isCompatible = sanitizeAndCheckCompatibility(
       stat,
       versionRangeToVersion,
