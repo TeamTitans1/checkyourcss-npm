@@ -1,3 +1,5 @@
+import chalk from "chalk";
+
 function renderResult(userSelections, result) {
   const resultToShow = {};
   userSelections.forEach(selection => {
@@ -11,25 +13,33 @@ function renderResult(userSelections, result) {
 
   userSelections.forEach(selection => {
     result.forEach(propertyInfo => {
-      if (
-        propertyInfo[selection.browser] &&
-        propertyInfo[selection.browser].compatibility[0] !== "y"
-      ) {
-        if (resultToShow[propertyInfo[selection.browser].property]) {
-          resultToShow[propertyInfo[selection.browser].property].lines.push(
-            propertyInfo[selection.browser].line,
-          );
-          resultToShow[propertyInfo[selection.browser].property].notices.push(
-            propertyInfo[selection.browser].compatibilityMessage,
-          );
-        } else {
-          resultToShow[propertyInfo[selection.browser].property] = {
-            property: propertyInfo[selection.browser].property,
-            lines: [propertyInfo[selection.browser].line],
-            notices: [propertyInfo[selection.browser].compatibilityMessage],
-          };
-        }
+      const browserInfo = propertyInfo[selection.browser];
+
+      if (!browserInfo || browserInfo.compatibility[0] === "y") {
+        return;
       }
+
+      const { property, line, compatibilityMessage } = browserInfo;
+      const resultKey =
+        resultToShow[property] ||
+        (resultToShow[property] = {
+          property,
+          lines: [],
+          notices: [],
+        });
+
+      let lineInfo = line;
+
+      if (browserInfo.cssMatching) {
+        const tailwindClassInfo = browserInfo.cssMatching[property];
+        const tailwindClass = tailwindClassInfo.find(
+          info => info.path === line,
+        );
+        lineInfo = `${chalk.green(tailwindClass.className)} ${line}`;
+      }
+
+      resultKey.lines.push(lineInfo);
+      resultKey.notices.push(compatibilityMessage);
     });
   });
 
