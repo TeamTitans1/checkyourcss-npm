@@ -110,8 +110,17 @@ function getVersionCompatibility(selection, property, canIUseData, line) {
       : parseInt(stat.version_added) <= versionRangeToVersion;
 
     const propertyAddedVersion = Array.isArray(stat)
-      ? parseInt(stat[0].version_added)
-      : parseInt(stat.version_added);
+      ? stat[0].version_added
+      : stat.version_added;
+
+    if (isNaN(propertyAddedVersion)) {
+      for (let i = 0; propertyAddedVersion.length; i++) {
+        if (isNaN(propertyAddedVersion[i])) {
+          propertyAddedVersion = propertyAddedVersion.substring(i + 1);
+          break;
+        }
+      }
+    }
 
     browsers[selection.browser].version.forEach(versionInfo => {
       if (Number(versionInfo.version) < Number(propertyAddedVersion)) {
