@@ -105,22 +105,31 @@ function getVersionCompatibility(selection, property, canIUseData, line) {
       versionRangeToVersion = convertToNumberWithOneDecimal(selection.version);
     }
 
-    isCompatible = Array.isArray(stat)
-      ? parseInt(stat[0].version_added) <= versionRangeToVersion
-      : parseInt(stat.version_added) <= versionRangeToVersion;
+    let propertyAddedVersion;
 
-    const propertyAddedVersion = Array.isArray(stat)
-      ? stat[0].version_added
-      : stat.version_added;
+    function sanitizeAndCheckCompatibility(stat, versionRangeToVersion) {
+      propertyAddedVersion = Array.isArray(stat)
+        ? stat[0].version_added
+        : stat.version_added;
 
-    if (isNaN(propertyAddedVersion)) {
-      for (let i = 0; propertyAddedVersion.length; i++) {
-        if (isNaN(propertyAddedVersion[i])) {
-          propertyAddedVersion = propertyAddedVersion.substring(i + 1);
-          break;
-        }
+      propertyAddedVersion = propertyAddedVersion.replace(/^\D*/, "");
+
+      if (isNaN(propertyAddedVersion)) {
+        propertyAddedVersion = propertyAddedVersion.replace(/^\D+/, "");
       }
+
+      const sanitizedVersion = parseInt(propertyAddedVersion, 10);
+
+      return (
+        !isNaN(sanitizedVersion) && sanitizedVersion <= versionRangeToVersion
+      );
     }
+
+    // 사용 예시:
+    const isCompatible = sanitizeAndCheckCompatibility(
+      stat,
+      versionRangeToVersion,
+    );
 
     browsers[selection.browser].version.forEach(versionInfo => {
       if (Number(versionInfo.version) < Number(propertyAddedVersion)) {
