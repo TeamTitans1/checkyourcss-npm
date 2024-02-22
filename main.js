@@ -51,13 +51,15 @@ async function main() {
 
       console.log(chalk.redBright.bold(data));
       Object.values(resultToShow).forEach(notSupport => {
-        console.log(`Property: ${notSupport.property}`);
+        console.log(
+          chalk.yellow.bold.italic(`Property: ${notSupport.property}`),
+        );
         notSupport.lines.forEach(line => {
           console.log(`Used At: ${line}`);
         });
 
         notSupport.notices.forEach(notice => {
-          console.log(`Compatibility: ${notice}`);
+          console.log(chalk.underline.whiteBright(`Compatibility: ${notice}`));
         });
 
         console.log(" ");
