@@ -63,7 +63,6 @@ function getVersionCompatibility(selection, property, canIUseData, line) {
   const browserName = convertBrowserName(browsers[selection.browser].stat);
   const versionsNotSupport = [];
   const versionsSupport = [];
-  let isCompatible = false;
 
   if (property in canIUseData) {
     const version = selection.version;
