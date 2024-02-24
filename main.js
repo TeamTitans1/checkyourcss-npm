@@ -4,6 +4,7 @@ import path from "path";
 import { getTailwindCss } from "./tailwindCss.js";
 import { checkCssCompatibility } from "./cssCompatibility.js";
 import { getStyledComponentsCss } from "./styledComponents.js";
+import { loadConfig } from "./configLoader.js";
 import { selectBrowsersAndVersions } from "./userSelection.js";
 import { renderResult } from "./result.js";
 import chalk from "chalk";
@@ -32,7 +33,8 @@ async function getUserCssData() {
 }
 
 async function main() {
-  const userSelections = await selectBrowsersAndVersions();
+  const userConfig = await loadConfig();
+  const userSelections = userConfig.browsers;
   const cssInfo = await getUserCssData();
   const result = await checkCssCompatibility(cssInfo, userSelections);
   const resultToShow = renderResult(userSelections, result);
@@ -54,13 +56,19 @@ async function main() {
         console.log(
           chalk.yellow.bold.italic(`Property: ${notSupport.property}`),
         );
-        notSupport.lines.forEach(line => {
-          console.log(`Used At: ${line}`);
-        });
+        if (userConfig.lineInfo) {
+          notSupport.lines.forEach(line => {
+            console.log(`Used At: ${line}`);
+          });
+        }
 
-        notSupport.notices.forEach(notice => {
-          console.log(chalk.underline.whiteBright(`Compatibility: ${notice}`));
-        });
+        if (userConfig.compatibilityInfo) {
+          notSupport.notices.forEach(notice => {
+            console.log(
+              chalk.underline.whiteBright(`Compatibility: ${notice}`),
+            );
+          });
+        }
 
         console.log(" ");
       });
