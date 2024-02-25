@@ -1,19 +1,19 @@
-import { existsSync, writeFileSync } from "fs";
-import { join } from "path";
+import path from "path";
+import fs from "fs";
+import { selectBrowsersAndVersions } from "./userSelection.js";
 
-const configPath = join(process.cwd(), ".cycrc.json");
-const defaultConfig = `{
-  "browsers": [
-    { "browser": "Chrome", "version": 121 }
-  ],
-  "lineInfo": true,
-  "compatibilityInfo": true
-}
-`;
+const currentPath = process.cwd();
 
-if (!existsSync(configPath)) {
-  writeFileSync(configPath, defaultConfig);
-  console.log("config.js has been created.");
-} else {
-  console.log("config.js already exists.");
+async function createConfig() {
+  const userSelections = await selectBrowsersAndVersions();
+  const configPath = path.join(currentPath, ".cycrc.json");
+  const defaultConfig = {
+    browsers: userSelections,
+    lineInfo: true,
+    compatibilityInfo: true,
+  };
+
+  fs.writeFileSync(configPath, JSON.stringify(defaultConfig, null, 2));
 }
+
+export { createConfig };
