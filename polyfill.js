@@ -46,6 +46,7 @@ function extractCssProperties(cssText) {
     cssProperties.forEach(property => {
       const pattern = /([\w-]+)\s*:\s*([\w-]+)/g;
       const matches = property.match(pattern);
+
       if (matches) {
         properties.push(matches[0] + ";");
       }
@@ -90,6 +91,7 @@ async function getCssPolyfills(userSelections, content) {
         ) {
           let j = i - 1;
           const info = { [splittedCss[i]]: [] };
+
           while (
             (splittedCss[j].includes("-webkit") ||
               splittedCss[j].includes("-moz") ||
@@ -112,7 +114,7 @@ async function getCssPolyfills(userSelections, content) {
   return await Promise.all(result);
 }
 
-function modifyFileContent(results, fileContent) {
+function fixFileContent(results, fileContent) {
   results.flat().forEach(result => {
     const keys = Object.keys(result);
 
@@ -186,7 +188,7 @@ async function changeStyledComponentsCss(filePath, userSelections) {
 
     files.forEach(file => {
       let fileContent = readFileContent(file);
-      const modifiedContent = modifyFileContent(results, fileContent);
+      const modifiedContent = fixFileContent(results, fileContent);
 
       fs.writeFileSync(file, modifiedContent);
     });
@@ -196,7 +198,7 @@ async function changeStyledComponentsCss(filePath, userSelections) {
     const cssText = getCssText(fileContent);
     const content = [...new Set(extractCssProperties(cssText))].join("");
     const results = await getCssPolyfills(userSelections, content);
-    const modifiedContent = modifyFileContent(results, fileContent);
+    const modifiedContent = fixFileContent(results, fileContent);
 
     fs.writeFileSync(fullPath, modifiedContent);
   }
