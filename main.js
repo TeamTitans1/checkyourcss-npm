@@ -4,13 +4,21 @@ import path from "path";
 import { getTailwindCss } from "./tailwindCss.js";
 import { checkCssCompatibility } from "./cssCompatibility.js";
 import { getStyledComponentsCss } from "./styledComponents.js";
-import { loadConfig } from "./configLoader.js";
 import { selectBrowsersAndVersions } from "./userSelection.js";
+import { loadConfig } from "./configLoader.js";
+import { createConfig } from "./create-config.js";
 import { renderResult } from "./result.js";
 import chalk from "chalk";
 import figlet from "figlet";
 
 const currentPath = process.cwd();
+const args = process.argv.slice(2);
+
+if (args.includes("--init")) {
+  createConfig();
+} else {
+  main();
+}
 
 async function getUserCssData() {
   const cssInfo = [];
@@ -34,10 +42,17 @@ async function getUserCssData() {
 
 async function main() {
   const userConfig = await loadConfig();
-  const userSelections = userConfig.browsers;
+  let configInfo;
+
+  if (!Object.keys(userConfig).length) {
+    configInfo = await selectBrowsersAndVersions();
+  } else {
+    configInfo = userConfig.browsers;
+  }
+
   const cssInfo = await getUserCssData();
-  const result = await checkCssCompatibility(cssInfo, userSelections);
-  const resultToShow = renderResult(userSelections, result);
+  const result = await checkCssCompatibility(cssInfo, configInfo);
+  const resultToShow = renderResult(configInfo, result);
 
   figlet(
     "Check Your CSS",
@@ -56,18 +71,30 @@ async function main() {
         console.log(
           chalk.yellow.bold.italic(`Property: ${notSupport.property}`),
         );
-        if (userConfig.lineInfo) {
+
+        if (!Object.keys(userConfig).length) {
           notSupport.lines.forEach(line => {
             console.log(`Used At: ${line}`);
           });
-        }
-
-        if (userConfig.compatibilityInfo) {
           notSupport.notices.forEach(notice => {
             console.log(
               chalk.underline.whiteBright(`Compatibility: ${notice}`),
             );
           });
+        } else {
+          if (userConfig.lineInfo) {
+            notSupport.lines.forEach(line => {
+              console.log(`Used At: ${line}`);
+            });
+          }
+
+          if (userConfig.compatibilityInfo) {
+            notSupport.notices.forEach(notice => {
+              console.log(
+                chalk.underline.whiteBright(`Compatibility: ${notice}`),
+              );
+            });
+          }
         }
 
         console.log(" ");
@@ -75,5 +102,3 @@ async function main() {
     },
   );
 }
-
-main();
