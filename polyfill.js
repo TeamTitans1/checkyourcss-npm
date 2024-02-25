@@ -68,7 +68,7 @@ async function addPrefixes(css, browserQuery) {
 
 async function getCssPolyfills(userSelections, content) {
   const result = userSelections.map(async selection => {
-    const browserQuery = `${selection.browser} ${selection.version}`; // Firefox 14 버전을 지정
+    const browserQuery = `${selection.browser} ${selection.version}`;
     const finalCss = await addPrefixes(content, browserQuery);
     const splittedCss = finalCss.split(";");
     const temp = [];
