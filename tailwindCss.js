@@ -92,7 +92,13 @@ async function getTailwindCssProperties() {
 
     root.walkDecls(decl => {
       if (decl.parent.selector.startsWith(".")) {
-        cssProperties.push({ [decl.prop]: decl.parent.selector });
+        cssProperties.push({
+          [decl.prop]: decl.parent.selector,
+          declaratives: {
+            twClass: decl.parent.selector,
+            decl: `${decl.prop}: ${decl.value};`,
+          },
+        });
       }
     });
 
@@ -194,6 +200,7 @@ function createCssInfo(pathAndTailwindClasses, cssPropertiesAndTwInfo) {
           info.cssProperties.push({
             property: cssPropertyName,
             line: tailwindClass.path,
+            declaratives: item.declaratives,
           });
         }
       });

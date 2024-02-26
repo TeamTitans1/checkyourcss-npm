@@ -223,12 +223,9 @@ async function changeToPolyfill() {
 
       if (fileContent.includes('"styled-components"')) {
         changeStyledComponentsCss(filePath, configInfo);
-      } else if (fileContent.includes("tailwindcss")) {
       }
     }
   }
 }
-
-changeToPolyfill();
 
 export { changeToPolyfill };

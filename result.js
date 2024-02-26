@@ -1,4 +1,6 @@
 import chalk from "chalk";
+import postcss from "postcss";
+import autoprefixer from "autoprefixer";
 
 function renderResult(userSelections, result) {
   const resultToShow = {};
@@ -6,7 +8,7 @@ function renderResult(userSelections, result) {
     result.forEach(propertyInfo => {
       if (propertyInfo[selection.browser]) {
         propertyInfo[selection.browser].compatibilityMessage =
-          `${propertyInfo[selection.browser].property} is supported ${selection.browser} from version ${propertyInfo[selection.browser].versionsSupport[0]} and higher.`;
+          `${selection.browser} ${propertyInfo[selection.browser].versionsSupport[0]} and higher`;
       }
     });
   });
@@ -26,6 +28,7 @@ function renderResult(userSelections, result) {
           property,
           lines: [],
           notices: [],
+          suggestion: [],
         });
 
       let lineInfo = line;
@@ -35,17 +38,34 @@ function renderResult(userSelections, result) {
         const tailwindClass = tailwindClassInfo.find(
           info => info.path === line,
         );
-        lineInfo = `${chalk.green(tailwindClass.className)} ${line}`;
+        lineInfo = `${chalk.whiteBright(tailwindClass.className)} ${line}`;
       }
+
+      const browserQuery = `${selection.browser} ${selection.version}`;
+      const autoprefixerPlugin = autoprefixer({
+        overrideBrowserslist: [browserQuery],
+      });
+      const processedCss = postcss(autoprefixerPlugin).process(
+        propertyInfo[selection.browser].declaratives.decl,
+        {
+          from: undefined,
+        },
+      );
 
       resultKey.lines.push(lineInfo);
       resultKey.notices.push(compatibilityMessage);
+      resultKey.suggestion.push(
+        selection.browser,
+        `${propertyInfo[selection.browser].declaratives.twClass.slice(1)} ➝ ${processedCss.css}`,
+      );
     });
   });
 
   Object.values(resultToShow).forEach(dup => {
     dup.lines = [...new Set(dup.lines)];
     dup.notices = [...new Set(dup.notices)];
+    dup.suggestion = [...new Set(dup.suggestion)];
+    dup.twClass = [...new Set(dup.twClass)];
   });
 
   return resultToShow;

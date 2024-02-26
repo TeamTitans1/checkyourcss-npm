@@ -70,35 +70,25 @@ async function main() {
       }
 
       console.log(chalk.redBright.bold(data));
+
       Object.values(resultToShow).forEach(notSupport => {
         console.log(
-          chalk.yellow.bold.italic(`Property: ${notSupport.property}`),
+          `${chalk.redBright("[Warning]")} ${chalk.greenBright.italic(notSupport.property)} is not supported in ${notSupport.notices}.`,
         );
 
-        if (!Object.keys(userConfig).length) {
-          notSupport.lines.forEach(line => {
-            console.log(`Used At: ${line}`);
-          });
-          notSupport.notices.forEach(notice => {
-            console.log(
-              chalk.underline.whiteBright(`Compatibility: ${notice}`),
-            );
-          });
-        } else {
-          if (userConfig.lineInfo) {
-            notSupport.lines.forEach(line => {
-              console.log(`Used At: ${line}`);
-            });
+        console.log(chalk.yellow("[Suggestion]"));
+        notSupport.suggestion.forEach(item => {
+          if (!item.includes(":")) {
+            console.log(`${item}:`);
+          } else {
+            console.log(`  ${item}`);
           }
+        });
 
-          if (userConfig.compatibilityInfo) {
-            notSupport.notices.forEach(notice => {
-              console.log(
-                chalk.underline.whiteBright(`Compatibility: ${notice}`),
-              );
-            });
-          }
-        }
+        console.log(chalk.blueBright("[Used At]"));
+        notSupport.lines.forEach(line => {
+          console.log(`${line}`);
+        });
 
         console.log(" ");
       });

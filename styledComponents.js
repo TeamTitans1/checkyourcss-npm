@@ -88,17 +88,22 @@ function extractCSSProperties(path, cssProperties) {
     .forEach(quasiPath => {
       const cssText = quasiPath.node.value.raw;
       const startLine = quasiPath.node.loc.start.line;
-      const regex = /(\w+-?\w+)\s*:/g;
+      const regex = /([a-zA-Z-]+)\s*:\s*([^;]+);/g;
       let match;
 
       while ((match = regex.exec(cssText))) {
+        const declaratives = match[0];
         const property = match[1];
         const lineOffset = calculateLineOffset(
           cssText.substring(0, match.index),
         );
         const propertyLine = startLine + lineOffset;
 
-        cssProperties.add({ property, line: propertyLine });
+        cssProperties.add({
+          property,
+          line: propertyLine,
+          declaratives,
+        });
       }
     });
 }
@@ -137,8 +142,13 @@ function getStyledComponentsCss(directoryPath, styledComponentsCss) {
           fileContents,
           styledVariableNames,
         );
+
         cssProperties = cssProperties.map(info => {
-          return { property: info.property, line: `${filePath}:${info.line}` };
+          return {
+            property: info.property,
+            line: `${filePath}:${info.line}`,
+            declaratives: { decl: info.declaratives },
+          };
         });
       }
 
