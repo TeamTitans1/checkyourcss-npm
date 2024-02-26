@@ -1,6 +1,5 @@
 import axios from "axios";
 import bcd from "@mdn/browser-compat-data" assert { type: "json" };
-import { decl } from "postcss";
 
 async function getCanIUseData() {
   try {
