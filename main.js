@@ -2,6 +2,7 @@
 import fs from "fs";
 import path from "path";
 import chalk from "chalk";
+import boxen from "boxen";
 import figlet from "figlet";
 import { loadConfig } from "./configLoader.js";
 import { createConfig } from "./create-config.js";
@@ -34,7 +35,7 @@ async function getUserCssData() {
 
       if (fileContents.includes('"styled-components"')) {
         getStyledComponentsCss(currentPath, cssInfo);
-      } else if (fileContents.includes("tailwindcss")) {
+      } else {
         cssInfo.push(...(await getTailwindCss(currentPath)));
       }
     }
@@ -72,24 +73,34 @@ async function main() {
       console.log(chalk.redBright.bold(data));
 
       Object.values(resultToShow).forEach(notSupport => {
-        console.log(
+        let message = chalk.bold(
           `${chalk.redBright("[Warning]")} ${chalk.greenBright.italic(notSupport.property)} is not supported in ${notSupport.notices}.`,
         );
 
-        console.log(chalk.yellow("[Suggestion]"));
+        message += "\n\n" + chalk.yellow("[Suggestion]") + "\n";
         notSupport.suggestion.forEach(item => {
           if (!item.includes(":")) {
-            console.log(`• ${item}:`);
+            message += `• ${item}:\n`;
           } else {
-            console.log(`  ${item}`);
+            message += `    ${item}\n`;
           }
         });
 
-        console.log(chalk.blueBright("[Used At]"));
+        message += "\n" + chalk.blueBright("[Used At]") + "\n";
         notSupport.lines.forEach(line => {
-          console.log(`• ${line}`);
+          message += `• ${line}\n`;
         });
 
+        console.log(
+          boxen(message, {
+            padding: 1,
+            margin: 1,
+            borderStyle: "round",
+            borderColor: "white",
+            backgroundColor: "black",
+            title: `${notSupport.property}`,
+          }),
+        );
         console.log(" ");
       });
     },
