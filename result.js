@@ -54,10 +54,15 @@ function renderResult(userSelections, result) {
 
       resultKey.lines.push(lineInfo);
       resultKey.notices.push(compatibilityMessage);
-      resultKey.suggestion.push(
-        selection.browser,
-        `${propertyInfo[selection.browser].declaratives.twClass.slice(1)} ➝ ${processedCss.css}`,
-      );
+
+      if (propertyInfo[selection.browser].declaratives.twClass) {
+        resultKey.suggestion.push(
+          selection.browser,
+          `${propertyInfo[selection.browser].declaratives.twClass.slice(1)} -> ${processedCss.css}`,
+        );
+      } else {
+        resultKey.suggestion.push(selection.browser, `${processedCss.css}`);
+      }
     });
   });
 
