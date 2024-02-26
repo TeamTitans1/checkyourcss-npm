@@ -1,21 +1,24 @@
 #!/usr/bin/env node
 import fs from "fs";
 import path from "path";
-import { getTailwindCss } from "./tailwindCss.js";
-import { checkCssCompatibility } from "./cssCompatibility.js";
-import { getStyledComponentsCss } from "./styledComponents.js";
-import { selectBrowsersAndVersions } from "./userSelection.js";
+import chalk from "chalk";
+import figlet from "figlet";
 import { loadConfig } from "./configLoader.js";
 import { createConfig } from "./create-config.js";
 import { renderResult } from "./result.js";
-import chalk from "chalk";
-import figlet from "figlet";
+import { getTailwindCss } from "./tailwindCss.js";
+import { changeToPolyfill } from "./polyfill.js";
+import { checkCssCompatibility } from "./cssCompatibility.js";
+import { getStyledComponentsCss } from "./styledComponents.js";
+import { selectBrowsersAndVersions } from "./userSelection.js";
 
 const currentPath = process.cwd();
 const args = process.argv.slice(2);
 
 if (args.includes("--init")) {
   createConfig();
+} else if (args.includes("--fix")) {
+  changeToPolyfill();
 } else {
   main();
 }
