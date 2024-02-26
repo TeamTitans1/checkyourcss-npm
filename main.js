@@ -79,7 +79,7 @@ async function main() {
         console.log(chalk.yellow("[Suggestion]"));
         notSupport.suggestion.forEach(item => {
           if (!item.includes(":")) {
-            console.log(`${item}:`);
+            console.log(`• ${item}:`);
           } else {
             console.log(`  ${item}`);
           }
@@ -87,7 +87,7 @@ async function main() {
 
         console.log(chalk.blueBright("[Used At]"));
         notSupport.lines.forEach(line => {
-          console.log(`${line}`);
+          console.log(`• ${line}`);
         });
 
         console.log(" ");
