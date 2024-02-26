@@ -5,6 +5,7 @@ import postcss from "postcss";
 import traverse from "@babel/traverse";
 import { parse } from "@babel/parser";
 import { execSync } from "child_process";
+import ora from "ora";
 
 function copyFiles(sourceDir, targetDir) {
   if (!fs.existsSync(targetDir)) {
@@ -79,7 +80,13 @@ async function getTailwindCssProperties() {
 
   copyFiles(process.cwd(), tempDir);
   process.chdir(tempDir);
-  execSync("npm install; npm run build");
+  const spinner = ora("still building...").start();
+  try {
+    execSync("npm install; npm run build");
+    spinner.succeed("build success!");
+  } catch (error) {
+    spinner.fail("fail...");
+  }
 
   const buildDirectoryPath = findBuildDirectory(process.cwd());
   const cssFilePath = getCssFilePath(buildDirectoryPath);
