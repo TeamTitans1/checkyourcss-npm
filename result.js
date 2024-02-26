@@ -29,7 +29,6 @@ function renderResult(userSelections, result) {
           lines: [],
           notices: [],
           suggestion: [],
-          twClass: [],
         });
 
       let lineInfo = line;
@@ -55,13 +54,10 @@ function renderResult(userSelections, result) {
 
       resultKey.lines.push(lineInfo);
       resultKey.notices.push(compatibilityMessage);
-      resultKey.suggestion.push(processedCss.css);
-
-      if (propertyInfo[selection.browser].declaratives.twClass) {
-        resultKey.twClass.push(
-          propertyInfo[selection.browser].declaratives.twClass.slice(1),
-        );
-      }
+      resultKey.suggestion.push(
+        selection.browser,
+        `${propertyInfo[selection.browser].declaratives.twClass.slice(1)} ➝ ${processedCss.css}`,
+      );
     });
   });
 

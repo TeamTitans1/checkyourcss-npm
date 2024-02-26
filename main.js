@@ -70,19 +70,20 @@ async function main() {
       }
 
       console.log(chalk.redBright.bold(data));
+
       Object.values(resultToShow).forEach(notSupport => {
         console.log(
           `${chalk.redBright("[Warning]")} ${chalk.greenBright.italic(notSupport.property)} is not supported in ${notSupport.notices}.`,
         );
 
         console.log(chalk.yellow("[Suggestion]"));
-        if (notSupport.twClass.length > 0) {
-          notSupport.twClass.forEach((item, index) => {
-            console.log(` ${chalk(item)} ➝ ${notSupport.suggestion[index]}`);
-          });
-        } else {
-          console.log(`${notSupport.suggestion[0]} `);
-        }
+        notSupport.suggestion.forEach(item => {
+          if (!item.includes(":")) {
+            console.log(`${item}:`);
+          } else {
+            console.log(`  ${item}`);
+          }
+        });
 
         console.log(chalk.blueBright("[Used At]"));
         notSupport.lines.forEach(line => {
