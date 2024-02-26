@@ -1,5 +1,6 @@
 import axios from "axios";
 import bcd from "@mdn/browser-compat-data" assert { type: "json" };
+import { decl } from "postcss";
 
 async function getCanIUseData() {
   try {
@@ -13,7 +14,13 @@ async function getCanIUseData() {
   }
 }
 
-function getVersionCompatibility(selection, property, canIUseData, line) {
+function getVersionCompatibility(
+  selection,
+  property,
+  canIUseData,
+  line,
+  declaratives,
+) {
   const agentsData = canIUseData.agents;
   const browsers = {
     Chrome: {
@@ -91,6 +98,7 @@ function getVersionCompatibility(selection, property, canIUseData, line) {
         versionsNotSupport,
         versionsPartiallySupport,
         versionsSupport,
+        declaratives,
       },
     };
   } else if (property in bcd.css.properties) {
@@ -147,6 +155,7 @@ function getVersionCompatibility(selection, property, canIUseData, line) {
         line,
         versionsNotSupport,
         versionsSupport,
+        declaratives,
       },
     };
   }
@@ -193,6 +202,7 @@ async function checkCssCompatibility(cssInfo, userSelections) {
           property.property,
           canIUseData,
           property.line,
+          property.declaratives,
         );
 
         if (compatibilityInfo) {

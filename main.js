@@ -72,33 +72,22 @@ async function main() {
       console.log(chalk.redBright.bold(data));
       Object.values(resultToShow).forEach(notSupport => {
         console.log(
-          chalk.yellow.bold.italic(`Property: ${notSupport.property}`),
+          `${chalk.redBright("[Warning]")} ${chalk.greenBright.italic(notSupport.property)} is not supported in ${notSupport.notices}.`,
         );
 
-        if (!Object.keys(userConfig).length) {
-          notSupport.lines.forEach(line => {
-            console.log(`Used At: ${line}`);
-          });
-          notSupport.notices.forEach(notice => {
-            console.log(
-              chalk.underline.whiteBright(`Compatibility: ${notice}`),
-            );
+        console.log(chalk.yellow("[Suggestion]"));
+        if (notSupport.twClass.length > 0) {
+          notSupport.twClass.forEach((item, index) => {
+            console.log(` ${chalk(item)} ➝ ${notSupport.suggestion[index]}`);
           });
         } else {
-          if (userConfig.lineInfo) {
-            notSupport.lines.forEach(line => {
-              console.log(`Used At: ${line}`);
-            });
-          }
-
-          if (userConfig.compatibilityInfo) {
-            notSupport.notices.forEach(notice => {
-              console.log(
-                chalk.underline.whiteBright(`Compatibility: ${notice}`),
-              );
-            });
-          }
+          console.log(`${notSupport.suggestion[0]} `);
         }
+
+        console.log(chalk.blueBright("[Used At]"));
+        notSupport.lines.forEach(line => {
+          console.log(`${line}`);
+        });
 
         console.log(" ");
       });
