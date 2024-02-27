@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
-import { parse } from "@babel/parser";
 import traverse from "@babel/traverse";
+import { parse } from "@babel/parser";
 
 function findStyledVariableNames(fileContents) {
   const ast = parse(fileContents, {

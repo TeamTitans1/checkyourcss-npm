@@ -7,7 +7,7 @@ import traverse from "@babel/traverse";
 import autoprefixer from "autoprefixer";
 import { parse } from "@babel/parser";
 import { loadConfig } from "./configLoader.js";
-import { selectBrowsersAndVersions } from "./userSelection.js";
+import { selectBrowsersAndVersions } from "./browserAndVersionSelector.js";
 
 function readFileContent(fullPath) {
   return fs.readFileSync(fullPath, "utf8");
