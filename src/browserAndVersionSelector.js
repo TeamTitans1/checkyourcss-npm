@@ -1,5 +1,5 @@
-import inquirer from "inquirer";
 import axios from "axios";
+import inquirer from "inquirer";
 
 async function getCanIUseData() {
   try {

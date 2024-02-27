@@ -1,11 +1,11 @@
 import os from "os";
 import fs from "fs";
+import ora from "ora";
 import path from "path";
 import postcss from "postcss";
 import traverse from "@babel/traverse";
 import { parse } from "@babel/parser";
 import { execSync } from "child_process";
-import ora from "ora";
 
 function copyFiles(sourceDir, targetDir) {
   if (!fs.existsSync(targetDir)) {

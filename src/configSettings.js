@@ -1,6 +1,6 @@
-import path from "path";
 import fs from "fs";
-import { selectBrowsersAndVersions } from "./userSelection.js";
+import path from "path";
+import { selectBrowsersAndVersions } from "./browserAndVersionSelector.js";
 
 const currentPath = process.cwd();
 
