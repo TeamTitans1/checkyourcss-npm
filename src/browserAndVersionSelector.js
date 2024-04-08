@@ -108,4 +108,4 @@ async function selectBrowsersAndVersions() {
   return browserVersions;
 }
 
-export { selectBrowsersAndVersions };
+export { getCanIUseData, selectBrowsersAndVersions };
