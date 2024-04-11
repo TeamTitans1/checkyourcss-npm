@@ -39,7 +39,7 @@ If the project is made with styled-components, cyc converts your incompatible CS
 ## Configuration
 You can make configuration file(.cycrc.json) using this command:
 ```shell
-npx cyc --config
+npx cyc --init
 ```
 
 The configuration file looks like this:
