@@ -228,4 +228,11 @@ async function changeToPolyfill() {
   }
 }
 
-export { changeToPolyfill };
+export {
+  changeToPolyfill,
+  getCssText,
+  extractCssProperties,
+  addPrefixes,
+  fixFileContent,
+  getCssPolyfills,
+};

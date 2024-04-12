@@ -55,6 +55,7 @@ async function main() {
   }
 
   const cssInfo = await getUserCssData();
+  console.log(cssInfo);
   const result = await checkCssCompatibility(cssInfo, configInfo);
   const resultToShow = renderResult(configInfo, result);
 
