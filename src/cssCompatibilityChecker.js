@@ -217,4 +217,4 @@ async function checkCssCompatibility(cssInfo, userSelections) {
   return result;
 }
 
-export { checkCssCompatibility };
+export { checkCssCompatibility, getVersionCompatibility, getCanIUseData };

@@ -225,4 +225,15 @@ async function getTailwindCss(projectDirectory) {
   return pathAndTailwindClasses;
 }
 
-export { getTailwindCss };
+export {
+  copyFiles,
+  findBuildDirectory,
+  traverseDirectory,
+  getCssFilePath,
+  getTailwindCssProperties,
+  parseFileToAST,
+  extractTailwindClasses,
+  extractTailwindClassesFromDirectory,
+  createCssInfo,
+  getTailwindCss,
+};

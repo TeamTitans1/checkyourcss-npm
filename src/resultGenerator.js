@@ -4,6 +4,7 @@ import autoprefixer from "autoprefixer";
 
 function renderResult(userSelections, result) {
   const resultToShow = {};
+
   userSelections.forEach(selection => {
     result.forEach(propertyInfo => {
       if (propertyInfo[selection.browser]) {

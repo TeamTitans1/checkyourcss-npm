@@ -164,4 +164,8 @@ function getStyledComponentsCss(directoryPath, styledComponentsCss) {
   return styledComponentsCss;
 }
 
-export { getStyledComponentsCss };
+export {
+  findStyledVariableNames,
+  extractStyledComponentsCSS,
+  getStyledComponentsCss,
+};
